@@ -5,8 +5,6 @@ library(XML)
 
 TwitConnect()
 
-setup_twitter_oauth(consumer_key,consumer_secret,access_token,access_secret)
-
 Talks<-getUser("TalksMachina")
 tweets<-userTimeline(Talks, n=550, excludeReplies=TRUE)
 tweets<-sapply(tweets,function(x) x$getText())
