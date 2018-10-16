@@ -12,6 +12,25 @@ setwd("C:\\Users\\Sarah\\Documents\\DataScience\\Twitter")
 #Load previous data
 if(file.exists("likesandrts.Rda")){
     load("likesandrts.Rda")
+}else{
+    likesandrts<-data.frame{"ID"=character(),              
+                            "Date"=as.Date(character()),   
+                            "Likes"=numeric(),
+                            "RTs"=numeric(),  
+                            "Ashley.Johnson"=numeric(),    
+                            "Brian.W..Foster"=numeric(),
+                            "Critical.Role"=numeric(),
+                            "Laura.Bailey"=numeric(),
+                            "Liam.O.Brien"=numeric(),
+                            "Marisha.Ray"=numeric(),
+                            "Matthew.Mercer"=numeric(),
+                            "Sam.Riegel"=numeric(),
+                            "Talisen.Jaffe"=numeric(),
+                            "Talks.Machina" =numeric(),
+                            "Travis.Willingham"=numeric(),
+                            FAotW=logical()
+
+    }
 }
 
 #Get new tweets
@@ -79,7 +98,9 @@ for (i in 1:length(htmlCode)){
     castlikes<-getActors(htmlCode[[i]], names)
   
     data.frame(Likes, RTs, castlikes, castnames) %>%
-    spread(key=castnames, value=castlikes) -> df
+    spread(key=castnames, value=castlikes) %>%
+    rbind(FAotW=FALSE) -> df
+
 
     if(data==0){data=df}
     else{data<-rbind(data,df)}
