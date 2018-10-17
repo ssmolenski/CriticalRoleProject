@@ -55,4 +55,5 @@ if(weekdays(date)=="Wednesday"){
 }
 
 save(file="data.Rda", data)
+write.csv(data, file="data.csv")
 
