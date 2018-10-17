@@ -4,6 +4,39 @@ library(stringr)
 library(XML)
 library(lubridate)
 library(dplyr)
+library(tidyr)
+
+####################################################
+getLikes <- function(htmlCode){
+    likesRegEx<- "[[:digit:]]*,*[[:digit:]]{1,3}[[:space:]]likes"
+    ind<-which(!is.na(str_extract(htmlCode,likesRegEx)),arr.ind=TRUE)
+    likes<-str_extract(htmlCode[ind[1]],"[[:digit:]]*,*[[:digit:]]{1,3}")
+
+    likes<-as.numeric(gsub(",","",likes))
+
+    return(likes)
+}
+
+getRTs <- function(htmlCode){
+    rtRegEx<- "[[:digit:]]*,*[[:digit:]]{1,3}[[:space:]]retweets"
+    ind<-which(!is.na(str_extract(htmlCode,rtRegEx)),arr.ind=TRUE)
+    rts<-str_extract(htmlCode[ind[1]],"[[:digit:]]*,*[[:digit:]]{1,3}")
+
+    rts<-as.numeric(gsub(",","",rts))
+
+    return(rts)
+}
+
+getActors <- function(htmlCode, names) {
+    castlikes<-numeric(0)
+    for (i in 1:length(names)){
+        castlikes<-c(castlikes,sum(grepl(names[i], htmlCode)))
+    }
+
+    return(castlikes)
+}
+
+####################################################
 
 #Date
 date<-today()
@@ -13,7 +46,7 @@ setwd("C:\\Users\\Sarah\\Documents\\DataScience\\Twitter")
 if(file.exists("likesandrts.Rda")){
     load("likesandrts.Rda")
 }else{
-    likesandrts<-data.frame{"ID"=character(),              
+    likesandrts<-data.frame("ID"=character(),              
                             "Date"=as.Date(character()),   
                             "Likes"=numeric(),
                             "RTs"=numeric(),  
@@ -28,10 +61,10 @@ if(file.exists("likesandrts.Rda")){
                             "Talisen.Jaffe"=numeric(),
                             "Talks.Machina" =numeric(),
                             "Travis.Willingham"=numeric(),
-                            FAotW=logical()
+                            FAotW=logical())
 
-    }
 }
+
 
 #Get new tweets
 TwitConnect()
@@ -49,7 +82,7 @@ for (i in 1:length(tweets)){
     urls<-c(urls , paste("https://twitter.com/", 
                         screenName(tweets[[i]]), 
                         "/status/", 
-                        id(tweets[[i]]),
+                        twitteR::id(tweets[[i]]),
                         sep=""
                         )
             )
@@ -127,5 +160,5 @@ artstats<-filter(artstats,
 
 
 rbind(likesandrts, artstats) %>%
-arrange(ID, Date)
+arrange(ID, Date) -> likesandrts
 save(file="likesandrts.Rda", likesandrts)
