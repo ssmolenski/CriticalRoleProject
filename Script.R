@@ -14,6 +14,7 @@ source("getURLs.R")
 source("getTweetData.R")
 source("NewTweets.R")
 source("Update.R")
+source("FanArt.R")
 source("C:\\Users\\Sarah\\Documents\\DataScience\\TwitConnect.R")
 
 ###############################################################################
@@ -44,13 +45,14 @@ if(file.exists("data.Rda")){
 
 }
 
-print("0")
 date <- today()
-print("1")
 new <- NewTweets(date)
-print("2")
-suppressWarnings(data<-rbind(data,new))
-print("3")
+data<-rbind(data,new)
+
+if(weekdays(date)=="Wednesday"){
+    ID<-FAotW()
+    data$FAotW[which(data$ID==ID)]=TRUE
+}
 
 save(file="data.Rda", data)
 
