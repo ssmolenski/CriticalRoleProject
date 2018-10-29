@@ -2,14 +2,16 @@ Update <- function(filename){
     load(filename)
     date<-today()
 
-    updated <- data.frame(ID=data$ID, 
-                            User=data$User)
-    updated <- unique(updated)
-    updated <- cbind(updated, 
-                    Date=rep(date,times=(dim(updated)[1])),
-                    FAotW=rep(FALSE,times=(dim(updated)[1])))
+    urls <- getURLs(IDs=data$ID, users=data$User)
+    urls <- unique(urls)
+    ind <- CheckURLs(urls)
+    urls <- urls[ind]
 
-    urls <- getURLs(IDs=updated$ID, users=updated$User)
+    new <- data.frame(ID=data$ID, User=data$User)
+    new <- unique(new)
+    new <- new[ind,]
+    new <- cbind(new, Date=rep(date,times=(dim(new)[1])))
+
     htmlCode<-list(0)
     for (i in 1:length(urls)){
         con=url(urls[i])
@@ -17,7 +19,12 @@ Update <- function(filename){
         close(con)
     }
 
-    suppressWarnings(updated <- cbind(updated, getTweetData(htmlCode)))
+    newdata <- getTweetData(htmlCode)
+    new<-cbind(new,newdata)
+
+    data<-select(data,1:3,5:17,4)
+    
+    updated<-rbind(data,new)
 
     return(updated)
 }

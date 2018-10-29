@@ -19,21 +19,24 @@ getTweetData <- function(htmlCode){
         make.names() %>%
         gsub("X.","", . ) -> castnames
 
-    data<-data.frame()
+    dataframe<-data.frame()
+    Likes<-0
+    RTs<-0
+    castlikes<-0
 
     for (i in 1:length(htmlCode)){
         Likes<-getLikes(htmlCode[[i]])
         RTs<-getRTs(htmlCode[[i]])
-        castlikes<-getActors(htmlCode[[i]])
+        #castlikes<-getActors(htmlCode[[i]])
   
-        data.frame(Likes, RTs, castlikes, castnames) %>%
-        spread(key=castnames, value=castlikes) %>%
-        rbind(FAotW=FALSE) -> df
+        temp <- data.frame(Likes, RTs, castlikes, castnames)
+        temp <- spread(temp, key=castnames, value=castlikes)
+        temp<- cbind(temp, FAotW=FALSE)
 
-        if(length(data)==0){data=df}
-        else{data<-rbind(data,df)}
+        if(length(dataframe)==0){dataframe=temp}
+        else{dataframe<-rbind(dataframe,temp)}
     }
-    return(data)
+    return(dataframe)
 }
 
 

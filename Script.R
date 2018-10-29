@@ -15,16 +15,14 @@ source("getTweetData.R")
 source("NewTweets.R")
 source("Update.R")
 source("FanArt.R")
+source("CheckURLs.R")
 source("C:\\Users\\Sarah\\Documents\\DataScience\\TwitConnect.R")
 
 ###############################################################################
 if(file.exists("data.Rda")){
     load("data.Rda")
     print("updating data")
-    updated <- Update("data.Rda")
-    print("combining data")
-    data <- rbind(data, updated)
-    
+    data <- Update("data.Rda")
 }else{
     data<-data.frame("ID"=character(),
                         "User"=character(),              

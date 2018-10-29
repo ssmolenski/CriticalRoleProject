@@ -21,9 +21,7 @@ NewTweets <- function(date){
                     ID=sapply(tweets,twitteR::id), 
                     User=sapply(tweets, screenName))
     artstats<-unique(artstats)
-    artstats<-cbind(artstats, 
-                    Date=rep(date,times=(dim(artstats)[1])), 
-                    FAotW=rep(FALSE,times=(dim(artstats)[1])))
+    artstats<-cbind(artstats, Date=rep(date,times=(dim(artstats)[1])))
 
     urls<-getURLs(IDs=artstats$ID, users=artstats$User)
     htmlCode<-list(0)
