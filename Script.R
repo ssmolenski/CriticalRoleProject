@@ -21,7 +21,6 @@ source("C:\\Users\\Sarah\\Documents\\DataScience\\TwitConnect.R")
 ###############################################################################
 if(file.exists("data.Rda")){
     load("data.Rda")
-    print("updating data")
     data <- Update("data.Rda")
 }else{
     data<-data.frame("ID"=character(),
@@ -48,10 +47,10 @@ new <- NewTweets(date)
 data<-rbind(data,new)
 
 if(weekdays(date)=="Wednesday"){
+    cat("Getting FAotW \n")
     ID<-FAotW()
     data$FAotW[which(data$ID==ID)]=TRUE
 }
-
 save(file="data.Rda", data)
 write.csv(data, file="data.csv")
 
