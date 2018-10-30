@@ -1,4 +1,11 @@
 NewTweets <- function(date){
+    #Dependencies
+    source("C:\\Users\\Sarah\\Documents\\DataScience\\TwitConnect.R")
+    source("getLikes.R")
+    source("getRTs.R")
+    library(twitteR)
+    library(tidyr)
+
     #Get new tweets
     TwitConnect()
 
@@ -21,30 +28,47 @@ NewTweets <- function(date){
 
     # cat("Stripping retweets \n")
     tweets<-c(strip_retweets(CR_art), strip_retweets(CR_fanart))
-    # cat("making dataframe \n")
+    # cat("making Tweetdata \n")
     artstats<-data.frame(
                     ID=sapply(tweets,twitteR::id), 
                     User=sapply(tweets, screenName))
     artstats<-unique(artstats)
     artstats<-cbind(artstats, Date=rep(date,times=(dim(artstats)[1])))
 
-    # cat("getting URLs \n")
-    urls<-getURLs(IDs=artstats$ID, users=artstats$User)
-    htmlCode<-list(0)
-    for (i in 1:length(urls)){
-        con=url(urls[i])
-        htmlCode[[i]]=readLines(con)
-        close(con)
+
+    # cat("Getting Likes and Retweets \n")
+    castlikes<-0
+    Tweetdata<-data.frame()
+    castnames <- c(
+    "Ashley.Johnson",
+    "Brian.W..Foster",
+    "Critical.Role",
+    "Laura.Bailey",
+    "Liam.O.Brien",
+    "Marisha.Ray",
+    "Matthew.Mercer",
+    "Sam.Riegel",
+    "Talisen.Jaffe",
+    "Talks.Machina",
+    "Travis.Willingham")
+
+    for (i in 1:nrow(artstats)){
+        # cat("For loop iteration ", i, "\n")
+        Likes<-getLikes(artstats$ID[[i]], artstats$User[[i]])
+        RTs<-getRTs(artstats$ID[[i]], artstats$User[[i]])
+        #castlikes<-getActors(artstats$ID[[i]], artstats$User[[i]])
+  
+        temp <- data.frame(Likes, RTs, castlikes, castnames)
+        temp <- spread(temp, key=castnames, value=castlikes)
+        temp<- cbind(temp, FAotW=FALSE)
+
+        if(length(Tweetdata)==0){Tweetdata=temp}
+        else{Tweetdata<-rbind(Tweetdata,temp)}
     }
 
-    # cat("getting tweet data \n")
-    Tweetdata <- getTweetData(htmlCode)
+
     # cat("combining")
     artstats <- cbind(artstats, Tweetdata)
-    # cat("Cutting out chains \n")
-    #Cutting out tweet-chains
-    artstats <- filter(artstats, RTs<100000)
-    artstats <- filter(artstats, Likes<100000)
     # cat("returning \n")
     return(artstats)
 }

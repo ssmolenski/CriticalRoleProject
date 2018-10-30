@@ -1,11 +1,17 @@
-getRTs <- function(htmlCode){
-    rtRegEx<- "[[:digit:]]*,*[[:digit:]]{1,3}[[:space:]]retweets"
-    ind<-which(!is.na(str_extract(htmlCode,rtRegEx)),arr.ind=TRUE)
-    rts<-str_extract(htmlCode[ind[1]],"[[:digit:]]*,*[[:digit:]]{1,3}")
+#Takes post id and username and returns number of retweets
 
-    rts<-as.numeric(gsub(",","",rts))
+getRTs <- function(i,u){
+    source("getURLs.R")
+    library(XML)
+    library(stringr)
+    library(RCurl)
+    url<-getURL(ID=i,user=u)
+    if(!url.exists(url)){return(NA)}
 
-    return(rts)
+    doc <- htmlParse(rawToChar(GET(url)$content))
+    xpathSApply(doc,"//li[@class='js-stat-count js-stat-retweets stat-count']",xmlValue) %>% 
+    str_extract("[[:digit:]]+") %>%
+    as.numeric() ->RTs
+
+    return(RTs)
 }
-
-

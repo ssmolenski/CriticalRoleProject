@@ -7,15 +7,9 @@ library(dplyr)
 library(tidyr)
 
 setwd("C:\\Users\\Sarah\\Documents\\DataScience\\Twitter")
-source("getLikes.R")
-source("getRTs.R")
-source("getActors.R")
-source("getURLs.R")
-source("getTweetData.R")
 source("NewTweets.R")
 source("Update.R")
 source("FanArt.R")
-source("CheckURLs.R")
 source("C:\\Users\\Sarah\\Documents\\DataScience\\TwitConnect.R")
 
 ###############################################################################
@@ -44,7 +38,7 @@ if(file.exists("data.Rda")){
 
 date <- today()
 new <- NewTweets(date)
-data<-rbind(data,new)
+data <- rbind(data,new)
 
 if(weekdays(date)=="Wednesday"){
     cat("Getting FAotW \n")

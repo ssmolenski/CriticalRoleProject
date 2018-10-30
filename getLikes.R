@@ -1,9 +1,17 @@
-getLikes <- function(htmlCode){
-    likesRegEx<- "[[:digit:]]*,*[[:digit:]]{1,3}[[:space:]]likes"
-    ind<-which(!is.na(str_extract(htmlCode,likesRegEx)),arr.ind=TRUE)
-    likes<-str_extract(htmlCode[ind[1]],"[[:digit:]]*,*[[:digit:]]{1,3}")
+#Takes post id and username and returns number of likes
 
-    likes<-as.numeric(gsub(",","",likes))
+getLikes <- function(i,u){
+    source("getURLs.R")
+    library(XML)
+    library(stringr)
+    library(RCurl)
+    url<-getURL(ID=i,user=u)
+    if(!url.exists(url)){return(NA)}
 
-    return(likes)
+    doc <- htmlParse(rawToChar(GET(url)$content))
+    xpathSApply(doc,"//li[@class='js-stat-count js-stat-favorites stat-count']",xmlValue) %>% 
+    str_extract("[[:digit:]]+") %>%
+    as.numeric() ->Likes
+
+    return(Likes)
 }
