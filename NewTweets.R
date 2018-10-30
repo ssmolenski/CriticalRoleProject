@@ -42,7 +42,9 @@ NewTweets <- function(date){
     # cat("combining")
     artstats <- cbind(artstats, Tweetdata)
     # cat("Cutting out chains \n")
-    artstats <- filter(artstats, Likes<100000) #Cutting out tweet-chains
+    #Cutting out tweet-chains
+    artstats <- filter(artstats, RTs<100000)
+    artstats <- filter(artstats, Likes<100000)
     # cat("returning \n")
     return(artstats)
 }
