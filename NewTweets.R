@@ -3,6 +3,7 @@ NewTweets <- function(date){
     source("C:\\Users\\Sarah\\Documents\\DataScience\\TwitConnect.R")
     source("getLikes.R")
     source("getRTs.R")
+    source("withArt.R")
     library(twitteR)
     library(tidyr)
 
@@ -24,6 +25,10 @@ NewTweets <- function(date){
 
     # cat("Stripping retweets \n")
     tweets<-c(strip_retweets(CR_art), strip_retweets(CR_fanart))
+    artind<-withArt(tweets)
+    tweets<-tweets[artind]
+
+
     # cat("making Tweetdata \n")
     artstats<-data.frame(
                     ID=sapply(tweets,twitteR::id), 
