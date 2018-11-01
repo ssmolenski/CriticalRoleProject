@@ -5,6 +5,7 @@ getRTs <- function(i,u){
     library(XML)
     library(stringr)
     library(RCurl)
+    library(httr)
     url<-getURL(ID=i,user=u)
     if(!url.exists(url)){return(NA)}
 
@@ -12,6 +13,10 @@ getRTs <- function(i,u){
     xpathSApply(doc,"//li[@class='js-stat-count js-stat-retweets stat-count']",xmlValue) %>% 
     str_extract("[[:digit:]]+") %>%
     as.numeric() ->RTs
+
+    if(length(RTs)==0){
+        RTs=0;
+    }
 
     return(RTs)
 }

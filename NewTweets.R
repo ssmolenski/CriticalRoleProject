@@ -10,21 +10,17 @@ NewTweets <- function(date){
     TwitConnect()
 
     # cat("Getting tweets #criticalroleart \n")
-    suppressWarnings(
-        CR_art <- searchTwitter("#criticalroleart",
+    CR_art <- searchTwitter("#criticalroleart",
                                 n=10000,
                                 resultType="recent",
                                 lang="en", 
                                 since=as.character(date-1))
-    )
     # cat("Getting tweets #criticalrolefanart")
-    suppressWarnings(
-        CR_fanart <- searchTwitter("#criticalrolefanart",
+    CR_fanart <- searchTwitter("#criticalrolefanart",
                                 n=10000,
                                 resultType="recent",
                                 lang="en", 
                                 since=as.character(date-1))
-    )
 
     # cat("Stripping retweets \n")
     tweets<-c(strip_retweets(CR_art), strip_retweets(CR_fanart))
@@ -57,7 +53,8 @@ NewTweets <- function(date){
         Likes<-getLikes(artstats$ID[[i]], artstats$User[[i]])
         RTs<-getRTs(artstats$ID[[i]], artstats$User[[i]])
         #castlikes<-getActors(artstats$ID[[i]], artstats$User[[i]])
-  
+
+        # cat("Likes: ", Likes, "\n RTs: ", RTs, "\n")
         temp <- data.frame(Likes, RTs, castlikes, castnames)
         temp <- spread(temp, key=castnames, value=castlikes)
         temp<- cbind(temp, FAotW=FALSE)
