@@ -1,4 +1,4 @@
-NewTweets <- function(date){
+NewTweets <- function(i){
     #Dependencies
     source("C:\\Users\\Sarah\\Documents\\DataScience\\TwitConnect.R")
     source("getLikes.R")
@@ -15,18 +15,20 @@ NewTweets <- function(date){
                                 n=10000,
                                 resultType="recent",
                                 lang="en", 
-                                since=as.character(date-1))
+                                sinceID=i)
     # cat("Getting tweets #criticalrolefanart")
     CR_fanart <- searchTwitter("#criticalrolefanart",
                                 n=10000,
                                 resultType="recent",
                                 lang="en", 
-                                since=as.character(date-1))
+                                sinceID=i)
 
     # cat("Stripping retweets \n")
     tweets<-c(strip_retweets(CR_art), strip_retweets(CR_fanart))
     artind<-withArt(tweets)
     tweets<-tweets[artind]
+    cosind<-withCos(tweets)
+    tweets<-tweets[cosind]
 
 
     # cat("making Tweetdata \n")

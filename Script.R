@@ -37,7 +37,8 @@ if(file.exists("data.Rda")){
 }
 
 date <- today()
-new <- NewTweets(date-1)
+lastid<-as.character(data$ID[[length(data)]])
+new <- NewTweets(lastid)
 data <- rbind(data,new)
 
 if(weekdays(date)=="Wednesday"){
