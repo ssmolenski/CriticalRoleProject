@@ -17,7 +17,7 @@ if(file.exists("data.Rda")){
     load("data.Rda")
     data <- Update("data.Rda")
 }else{
-    data<-data.frame("ID"=character(),
+    data<-data.frame(   "ID"=character(),
                         "User"=character(),              
                         "Date"=as.Date(character()),   
                         "Likes"=numeric(),
@@ -26,7 +26,8 @@ if(file.exists("data.Rda")){
                         "Brian.W..Foster"=numeric(),
                         "Critical.Role"=numeric(),
                         "Laura.Bailey"=numeric(),
-                        "Liam.O.Brien"=numeric(),                            "Marisha.Ray"=numeric(),
+                        "Liam.O.Brien"=numeric(),
+                        "Marisha.Ray"=numeric(),
                         "Matthew.Mercer"=numeric(),
                         "Sam.Riegel"=numeric(),
                         "Talisen.Jaffe"=numeric(),
@@ -37,7 +38,11 @@ if(file.exists("data.Rda")){
 }
 
 date <- today()
-lastid<-as.character(data$ID[[length(data)]])
+if(nrow(data)>0){
+    lastid <- as.character(data$ID[[nrow(data)]])
+}else{
+    lastid <- 0
+}
 new <- NewTweets(lastid)
 data <- rbind(data,new)
 

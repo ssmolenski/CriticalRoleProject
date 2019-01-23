@@ -4,31 +4,47 @@ NewTweets <- function(i){
     source("getLikes.R")
     source("getRTs.R")
     source("withArt.R")
+    source("withCos.R")
     library(twitteR)
     library(tidyr)
+    library(lubridate)
 
     #Get new tweets
     TwitConnect()
 
-    # cat("Getting tweets #criticalroleart \n")
-    CR_art <- searchTwitter("#criticalroleart",
-                                n=10000,
+    if(i==0){
+        date <- toString(today()-1)
+        # cat("Getting tweets #criticalroleart \n")
+        CR_art <- searchTwitter("#criticalroleart",
+                                n=5000,
                                 resultType="recent",
-                                lang="en", 
+                                since=date)
+        # cat("Getting tweets #criticalrolefanart")
+        CR_fanart <- searchTwitter("#criticalrolefanart",
+                                n=5000,
+                                resultType="recent",
+                                since=date)
+    }else{
+        # cat("Getting tweets #criticalroleart \n")
+        CR_art <- searchTwitter("#criticalroleart",
+                                n=5000,
+                                resultType="recent", 
                                 sinceID=i)
-    # cat("Getting tweets #criticalrolefanart")
-    CR_fanart <- searchTwitter("#criticalrolefanart",
-                                n=10000,
-                                resultType="recent",
-                                lang="en", 
+        # cat("Getting tweets #criticalrolefanart")
+        CR_fanart <- searchTwitter("#criticalrolefanart",
+                                n=5000,
+                                resultType="recent", 
                                 sinceID=i)
 
+    }
+
+    
     # cat("Stripping retweets \n")
     tweets<-c(strip_retweets(CR_art), strip_retweets(CR_fanart))
     artind<-withArt(tweets)
     tweets<-tweets[artind]
     cosind<-withCos(tweets)
-    tweets<-tweets[cosind]
+    tweets<-tweets[!cosind]
 
 
     # cat("making Tweetdata \n")
@@ -57,8 +73,8 @@ NewTweets <- function(i){
 
     for (i in 1:nrow(artstats)){
         # cat("For loop iteration ", i, "\n")
-        Likes<-getLikes(artstats$ID[[i]], artstats$User[[i]])
-        RTs<-getRTs(artstats$ID[[i]], artstats$User[[i]])
+        Likes <- getLikes(artstats$ID[[i]], artstats$User[[i]])
+        RTs <- getRTs(artstats$ID[[i]], artstats$User[[i]])
         #castlikes<-getActors(artstats$ID[[i]], artstats$User[[i]])
 
         # cat("Likes: ", Likes, "\n RTs: ", RTs, "\n")
