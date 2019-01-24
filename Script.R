@@ -13,10 +13,18 @@ source("FanArt.R")
 source("C:\\Users\\Sarah\\Documents\\DataScience\\TwitConnect.R")
 
 ###############################################################################
+date <- today()
+
 if(file.exists("data.Rda")){
+    cat("Loading existing data file...\n")
     load("data.Rda")
-    data <- Update("data.Rda")
+    lastdate <- as.Date(data$Date[nrow(data)])
+    if(lastdate!=date){
+        cat("Updating tweet data...\n")
+        data <- Update(data)
+    }
 }else{
+    cat("Creating new dataframe...\n")
     data<-data.frame(   "ID"=character(),
                         "User"=character(),              
                         "Date"=as.Date(character()),   
@@ -37,20 +45,22 @@ if(file.exists("data.Rda")){
 
 }
 
-date <- today()
 if(nrow(data)>0){
     lastid <- as.character(data$ID[[nrow(data)]])
 }else{
     lastid <- 0
 }
+cat("Retrieving new tweets...\n")
 new <- NewTweets(lastid)
 data <- rbind(data,new)
 
 if(weekdays(date)=="Wednesday"){
-    cat("Getting FAotW \n")
+    cat("Getting FAotW... \n")
     ID<-FAotW()
     data$FAotW[which(data$ID==ID)]=TRUE
 }
+
+cat("Saving files. \n")
 save(file="data.Rda", data)
 write.csv(data, file="data.csv")
 

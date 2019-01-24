@@ -9,7 +9,7 @@ NewTweets <- function(i){
     library(tidyr)
     library(lubridate)
 
-    #Get new tweets
+    #Get new tweetsRe
     TwitConnect()
 
     if(i==0){

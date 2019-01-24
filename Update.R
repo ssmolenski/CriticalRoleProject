@@ -1,12 +1,11 @@
-Update <- function(filename){
+Update <- function(df){
     source("getLikes.R")
     source("getRTs.R")
     library(tidyr)
 
-    load(filename)
     date<-today()
 
-    newdata <- data.frame(ID=data$ID, User=data$User)
+    newdata <- data.frame(ID=df$ID, User=df$User)
     newdata <- unique(newdata)
     newdata <- cbind(newdata, Date=rep(date,times=(dim(newdata)[1])))
 
@@ -42,7 +41,7 @@ Update <- function(filename){
 
     newdata<-cbind(newdata,Tweetdata)
     
-    updated<-rbind(data,newdata)
+    updated<-rbind(df,newdata)
 
     return(updated)
 }
