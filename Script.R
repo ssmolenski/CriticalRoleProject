@@ -19,7 +19,7 @@ if(file.exists("data.Rda")){
     cat("Loading existing data file...\n")
     load("data.Rda")
     lastdate <- as.Date(data$Date[nrow(data)])
-    if(lastdate!=date){
+    if(lastdate!= date){
         cat("Updating tweet data...\n")
         data <- Update(data)
     }

@@ -13,17 +13,17 @@ NewTweets <- function(i){
     TwitConnect()
 
     if(i==0){
-        date <- toString(today()-1)
+        yesterday <- toString(today()-1)
         # cat("Getting tweets #criticalroleart \n")
         CR_art <- searchTwitter("#criticalroleart",
                                 n=5000,
                                 resultType="recent",
-                                since=date)
+                                since=yesterday)
         # cat("Getting tweets #criticalrolefanart")
         CR_fanart <- searchTwitter("#criticalrolefanart",
                                 n=5000,
                                 resultType="recent",
-                                since=date)
+                                since=yesterday)
     }else{
         # cat("Getting tweets #criticalroleart \n")
         CR_art <- searchTwitter("#criticalroleart",
@@ -46,7 +46,7 @@ NewTweets <- function(i){
     cosind<-withCos(tweets)
     tweets<-tweets[!cosind]
 
-
+    date=today()
     # cat("making Tweetdata \n")
     artstats<-data.frame(
                     ID=sapply(tweets,twitteR::id), 
