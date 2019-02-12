@@ -5,11 +5,12 @@ Update <- function(df){
 
     date<-today()
 
+    cat("[Update] Acquiring User/ID pairs...\n")
     newdata <- data.frame(ID=df$ID, User=df$User)
     newdata <- unique(newdata)
     newdata <- cbind(newdata, Date=rep(date,times=(dim(newdata)[1])))
 
-# cat("Getting Likes and Retweets \n")
+    cat("[Update] Getting Likes and Retweets...\n")
     castlikes<-0
     Tweetdata<-data.frame()
     castnames <- c(
@@ -43,5 +44,6 @@ Update <- function(df){
     
     updated<-rbind(df,newdata)
 
+    cat("[Update] Returning.\n")
     return(updated)
 }

@@ -14,31 +14,35 @@ NewTweets <- function(i){
 
     if(i==0){
         yesterday <- toString(today()-1)
-        # cat("Getting tweets #criticalroleart \n")
-        CR_art <- searchTwitter("#criticalroleart",
+        cat("[NewTweets] Getting #criticalroleart tweets since yesterday...\n")
+        suppressWarnings(CR_art <- searchTwitter("#criticalroleart",
                                 n=5000,
                                 resultType="recent",
-                                since=yesterday)
-        # cat("Getting tweets #criticalrolefanart")
-        CR_fanart <- searchTwitter("#criticalrolefanart",
+                                since=yesterday))
+        cat("[NewTweets] Found ", length(CR_art), " tweets. \n")
+        cat("[NewTweets] Getting #criticalrolefanart tweets since yesterday...\n")
+        suppressWarnings(CR_fanart <- searchTwitter("#criticalrolefanart",
                                 n=5000,
                                 resultType="recent",
-                                since=yesterday)
+                                since=yesterday))
+        cat("[NewTweets] Found ", length(CR_fanart), " tweets. \n")
     }else{
-        # cat("Getting tweets #criticalroleart \n")
-        CR_art <- searchTwitter("#criticalroleart",
+        cat("[NewTweets] Getting #criticalroleart tweets since id ", i, "...\n")
+        suppressWarnings(CR_art <- searchTwitter("#criticalroleart",
                                 n=5000,
                                 resultType="recent", 
-                                sinceID=i)
-        # cat("Getting tweets #criticalrolefanart")
-        CR_fanart <- searchTwitter("#criticalrolefanart",
-                                n=5000,
+                                sinceID=i))
+        cat("[NewTweets] Found ", length(CR_art), " tweets. \n")
+        cat("[NewTweets] Getting #criticalrolefanart since id ", i, "...\n")
+        suppressWarnings(CR_fanart <- searchTwitter("#criticalrolefanart",
+                                n=8000,
                                 resultType="recent", 
-                                sinceID=i)
+                                sinceID=i))
+        cat("[NewTweets] Found ", length(CR_fanart), " tweets. \n")
 
     }
 
-    
+    cat("[NewTweets] Cleaning tweet data...\n")
     # cat("Stripping retweets \n")
     tweets<-c(strip_retweets(CR_art), strip_retweets(CR_fanart))
     artind<-withArt(tweets)
@@ -53,6 +57,8 @@ NewTweets <- function(i){
                     User=sapply(tweets, screenName))
     artstats<-unique(artstats)
     artstats<-cbind(artstats, Date=rep(date,times=(dim(artstats)[1])))
+
+    cat("[NewTweets] Found a total of ", nrow(artstats), " tweets of interest.\n")
 
 
     # cat("Getting Likes and Retweets \n")
@@ -89,6 +95,6 @@ NewTweets <- function(i){
 
     # cat("combining")
     artstats <- cbind(artstats, Tweetdata)
-    # cat("returning \n")
+    cat("[NewTweets] Returning. \n")
     return(artstats)
 }
